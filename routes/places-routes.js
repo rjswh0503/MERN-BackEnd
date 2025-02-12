@@ -1,5 +1,8 @@
 const exrpess = require('express');
 
+
+const HttpError = require('../models/http-error');
+
 const router = exrpess.Router();
 
 const DUMMY_PLACES = [
@@ -19,16 +22,17 @@ const DUMMY_PLACES = [
 
 router.get('/:pid', (req,res,next) => {
     const placesId = req.params.pid // { pId : 'p1'}
+
     const place = DUMMY_PLACES.find(p => {
         return p.id === placesId
     });
-   if(!place){
-    const error = new Error('해당 ID에 대한 장소를 찾지 못했습니다.');
-    error.code = 404;
-    throw error;
-    // thorw를 할 때는 return을 쓰지 않아도 되지만 next(error)를 사용할 경우에는 앞에 return을 꼭 사용
-   } 
-    res.json({place})
+
+   if(!place){              // constructor(message,            errorCode);
+    throw new HttpError('해당 ID값에 대한 장소를 찾지 못했습니다.', 404);
+    
+    // thorw를 할 때는 return을 쓰지 않아도 되지만, next(error)를 사용할 경우에는 앞에 return을 꼭 사용
+   };
+    res.json({ place })
     
 });
 
@@ -43,14 +47,16 @@ id 값을 찾기 위해서는 params를 사용해야 함
 
 router.get('/user/:uid', (req,res, next) => {
     const userId = req.params.uid;
+
     const place = DUMMY_PLACES.find(p => {
         return p.creator === userId
     });
+    
     if(!place){
-        const error = new Error('해당 ID에 대한 유저를 찾지 못했습니다.');
-        error.code = 404;
-       return next(error);
-    }
+       return next(
+       new HttpError('해당 ID값에 대한 유저를 찾지 못했습니다.', 404)
+    );
+    };
     res.json({place})
 })
 
