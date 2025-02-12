@@ -28,10 +28,10 @@ router.get('/:pid',(req,res,next) => {
 
 router.get('/user/:uid', (req,res, next) => {
     const userId = req.params.uid;
-    const user = DUMMY_PLACES.find(u => {
-        return u.creator === userId
+    const place = DUMMY_PLACES.find(p => {
+        return p.creator === userId
     });
-    res.json({user})
+    res.json({place})
 })
 
 //places 파일에 있는 router를 내보냄
