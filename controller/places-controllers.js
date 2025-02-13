@@ -88,6 +88,12 @@ const createPlace = (req, res, next) => {
 }
 
 const updatePlaceById = (req, res, next) => {
+    const erros =  validationResult(req);
+    if(!erros.isEmpty()){
+        console.log(erros);
+        throw new HttpError('유효하지 않은 입력 데이터를 전달했습니다. 데이터를 확인하세요.', 404);
+    }
+
     const { title, description } = req.body;
     const placeId = req.params.pid;
 
@@ -104,6 +110,9 @@ const updatePlaceById = (req, res, next) => {
 
 const deletePlace = (req,res,next) => {
     const placeId = req.params.pid;
+    if(DUMMY_PLACES.find(p => p.id === placeId)){
+        throw new HttpError('그 id에 해당하는 장소를 찾지 못했습니다.', 404)
+    }
     DUMMY_PLACES = DUMMY_PLACES.filter(p => p.id !== placeId);
     res.status(200).json({message : '성공적으로 삭제되었습니다.'});
 }

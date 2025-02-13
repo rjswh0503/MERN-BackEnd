@@ -42,7 +42,16 @@ router.post('/',
     // controller가 실행되기 전에 미들웨어가 실행된다. title이 비어있지 않으면 확인 후 controller가 실행
     placeControllers.createPlace);
 
-router.patch('/:pid', placeControllers.updatePlaceById);
+router.patch('/:pid',
+    [
+        check('title')
+        .not()
+        .isEmpty(),
+        check('description')
+        .isLength({min: 5}),
+        
+    ],
+    placeControllers.updatePlaceById);
 
 router.delete('/:pid', placeControllers.deletePlace);
 

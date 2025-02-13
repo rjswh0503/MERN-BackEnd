@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
+const { validationResult } = require('express-validator');
 
 const HttpError = require('../models/http-error');
 
@@ -17,6 +18,13 @@ const getUsers = (req,res, next) => {
 }
 
 const signUp = (req,res,next) => {
+
+    const error = validationResult(req);
+
+    if(!error.isEmpty()){
+        throw new HttpError('유효하지 않은 입력 데이터를 전달했습니다. 데이터를 확인하세요.', 401)
+    }
+
     const { name, email, password } = req.body;
 
     const hasUser = DUMMY_USERS.find(u => u.email === email);
