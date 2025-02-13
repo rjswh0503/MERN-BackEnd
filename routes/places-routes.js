@@ -1,9 +1,11 @@
 const exrpess = require('express');
+const { check } = require('express-validator');
 
 
 const placeControllers = require('../controller/places-controllers');
 
 const router = exrpess.Router();
+
 
 
 
@@ -22,7 +24,23 @@ router.get('/user/:uid', placeControllers.getPlacesByUserId);
 
 
 // placeControllers에 있는 createPlace함수에 포인터
-router.post('/', placeControllers.createPlace);
+
+// check()를 /api/places/을 대상으로 하는 post 요청에 추가 
+// title이 비어 있지(isEmpty)않도록(not) 확인(check())하는 미들웨어
+router.post('/', 
+    [
+    check('title')
+        .not()
+        .isEmpty(),
+    check('description')
+        .isLength({min: 5}),
+    
+    check('address')
+        .not()
+        .isEmpty()    
+    ],
+    // controller가 실행되기 전에 미들웨어가 실행된다. title이 비어있지 않으면 확인 후 controller가 실행
+    placeControllers.createPlace);
 
 router.patch('/:pid', placeControllers.updatePlaceById);
 

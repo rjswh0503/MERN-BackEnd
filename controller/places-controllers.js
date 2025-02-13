@@ -1,6 +1,7 @@
 
 // uuid 고유 식별자 id 
 const { v4: uuidv4 } = require('uuid');
+const { validationResult } = require('express-validator');
 
 
 const HttpError = require('../models/http-error');
@@ -62,6 +63,13 @@ const getPlacesByUserId = (req,res, next) => {
 
 
 const createPlace = (req, res, next) => {
+
+  const erros =  validationResult(req);
+  if(!erros.isEmpty()){
+    console.log(erros);
+    throw new HttpError('유효하지 않은 입력 데이터를 전달했습니다. 데이터를 확인하세요.', 422);
+  }
+
     const { title, description, coordinates, address, creator } = req.body;
     // const title = req.body.title 과 같음..
     const createPlace = {
