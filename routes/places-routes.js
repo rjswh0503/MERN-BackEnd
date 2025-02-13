@@ -1,7 +1,7 @@
 const exrpess = require('express');
 
 
-const placeControllers = require('../controller/places-controller');
+const placeControllers = require('../controller/places-controllers');
 
 const router = exrpess.Router();
 

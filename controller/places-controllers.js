@@ -48,16 +48,16 @@ const getPlacesById  = (req,res,next) => {
 const getPlacesByUserId = (req,res, next) => {
     const userId = req.params.uid;
 
-    const place = DUMMY_PLACES.find(p => {
+    const places = DUMMY_PLACES.filter(p => {
         return p.creator === userId
     });
     
-    if(!place){
+    if(!places || places.length === 0 ){
        return next(
-       new HttpError('해당 ID값에 대한 유저를 찾지 못했습니다.', 404)
+       new HttpError('제공된 사용자 ID와 일치하는 장소를 찾을 수 없습니다.', 404)
     );
     };
-    res.json({place})
+    res.json({ places })
 };
 
 
