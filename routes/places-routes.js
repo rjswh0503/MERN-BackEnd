@@ -7,7 +7,7 @@ const router = exrpess.Router();
 
 
 
-router.get('/:pid', placeControllers.getPlaceById);
+router.get('/:pid', placeControllers.getPlacesById);
 
 
 /* 
@@ -18,11 +18,15 @@ router.get('/:pid', placeControllers.getPlaceById);
 id 값을 찾기 위해서는 params를 사용해야 함
 */
 
-router.get('/user/:uid', placeControllers.getPlaceByUserId);
+router.get('/user/:uid', placeControllers.getPlacesByUserId);
 
 
 // placeControllers에 있는 createPlace함수에 포인터
 router.post('/', placeControllers.createPlace);
+
+router.patch('/:pid', placeControllers.updatePlaceById);
+
+router.delete('/:pid', placeControllers.deletePlace);
 
 //places 파일에 있는 router를 내보냄
 // 오로지지 내보내기만 하므로 app.js에서 불러와야 함

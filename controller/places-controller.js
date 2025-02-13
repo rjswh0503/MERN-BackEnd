@@ -1,6 +1,11 @@
+
+// uuid 고유 식별자 id 
+const { v4: uuidv4 } = require('uuid');
+
+
 const HttpError = require('../models/http-error');
 
-const DUMMY_PLACES = [
+let DUMMY_PLACES = [
     {
         id: 'p1',
         title: 'Empire State Building',
@@ -15,7 +20,7 @@ const DUMMY_PLACES = [
     }
 ]
 
-const getPlaceById  = (req,res,next) => {
+const getPlacesById  = (req,res,next) => {
     const placesId = req.params.pid // { pId : 'p1'}
 
     const place = DUMMY_PLACES.find(p => {
@@ -40,7 +45,7 @@ const getPlaceById  = (req,res,next) => {
 
 
 
-const getPlaceByUserId = (req,res, next) => {
+const getPlacesByUserId = (req,res, next) => {
     const userId = req.params.uid;
 
     const place = DUMMY_PLACES.find(p => {
@@ -60,6 +65,7 @@ const createPlace = (req, res, next) => {
     const { title, description, coordinates, address, creator } = req.body;
     // const title = req.body.title 과 같음..
     const createPlace = {
+        id: uuidv4(),
         title,
         description,
         location : coordinates,
@@ -73,7 +79,30 @@ const createPlace = (req, res, next) => {
     res.status(201).json({place: createPlace})
 }
 
+const updatePlaceById = (req, res, next) => {
+    const { title, description } = req.body;
+    const placeId = req.params.pid;
 
-exports.getPlaceById = getPlaceById;
-exports.getPlaceByUserId = getPlaceByUserId;
+    const updatedPlace =  {...DUMMY_PLACES.find(p => p.id === placeId)};
+    const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId);
+    updatedPlace.title = title;
+    updatedPlace.description = description;
+
+    DUMMY_PLACES[placeIndex] = updatedPlace;
+
+    res.status(200).json({place: updatedPlace});
+
+}
+
+const deletePlace = (req,res,next) => {
+    const placeId = req.params.pid;
+    DUMMY_PLACES = DUMMY_PLACES.filter(p => p.id !== placeId);
+    res.status(200).json({message : '성공적으로 삭제되었습니다.'});
+}
+
+
+exports.getPlacesById = getPlacesById;
+exports.getPlacesByUserId = getPlacesByUserId;
 exports.createPlace = createPlace;
+exports.updatePlaceById = updatePlaceById;
+exports.deletePlace = deletePlace;

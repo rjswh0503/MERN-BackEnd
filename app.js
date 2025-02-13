@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 
 // router 미들웨어가 되어 편하게 사용 가능
 const placesRoutes = require('./routes/places-routes');
-const userRoutes = require('./routes/users-routes');
+const HttpError = require('./models/http-error');
 
 
 const app = express();
@@ -12,6 +12,10 @@ app.use(bodyParser.json());
 
 app.use('/api/places',placesRoutes); // => /api/places/...
 
+app.use((req,res,next) => {
+    const error = new HttpError('라우트를 찾지 못했습니다.',404);
+    throw error;
+});
 
 /*
 오류 처리 미들웨어 생성
