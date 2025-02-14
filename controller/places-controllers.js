@@ -68,7 +68,7 @@ const createPlace =  async (req, res, next) => {
   const erros =  validationResult(req);
   if(!erros.isEmpty()){
     console.log(erros);
-    next(new HttpError('유효하지 않은 입력 데이터를 전달했습니다. 데이터를 확인하세요.', 422));
+   return next(new HttpError('유효하지 않은 입력 데이터를 전달했습니다. 데이터를 확인하세요.', 422));
   }
 
     const { title, description, address, creator } = req.body;
